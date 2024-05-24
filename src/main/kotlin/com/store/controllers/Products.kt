@@ -12,9 +12,9 @@ import org.apache.maven.surefire.shade.org.apache.commons.lang3.StringUtils
 class ProductsController {
 
     private val products = mutableListOf(
-        Product(1, "Magical Wand", ProductType.GADGET, 2),
-        Product(2, "Flying broomstick", ProductType.BOOK, 20),
-        Product(3, "Book of magic spells", ProductType.FOOD, 30)
+        Product(1, "Magical Wand", ProductType.GADGET, 2, 80.50),
+        Product(2, "Flying broomstick", ProductType.BOOK, 20, 275.00),
+        Product(3, "Book of magic spells", ProductType.FOOD, 30, 45.90)
     )
 
     @GetMapping("")
@@ -54,7 +54,10 @@ class ProductsController {
     @PostMapping("")
     fun addProduct(@Valid @RequestBody productRequest: ProductRequest): ResponseEntity<Any> {
         // Check if the fields are not null or empty
-        if (productRequest.name.isEmpty() || productRequest.type == null || productRequest.inventory == null) {
+        if (productRequest.name.isEmpty()
+            || productRequest.type == null
+            || productRequest.inventory == null
+            || productRequest.cost == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 ErrorResponseBody(
                     timestamp = java.time.LocalDateTime.now().toString(),
@@ -94,21 +97,21 @@ class ProductsController {
             id = products.size + 1,
             name = productRequest.name,
             type = productRequest.type,
-            inventory = productRequest.inventory
+            inventory = productRequest.inventory,
+            cost = productRequest.cost
         )
         products.add(newProduct)
         return ResponseEntity.status(HttpStatus.CREATED).body(ProductId(newProduct.id))
     }
-
-
 }
 
-data class Product(val id: Int, val name: String, val type: ProductType, val inventory: Int)
+data class Product(val id: Int, val name: String, val type: ProductType, val inventory: Int, val cost: Double)
 
 data class ProductRequest @JsonCreator constructor(
     @field:NotBlank(message = "Name must not be blank") @JsonProperty("name") val name: String,
     @field:NotNull(message = "Type must not be null") @JsonProperty("type") val type: ProductType?,
-    @field:NotNull(message = "Inventory must not be null") @JsonProperty("inventory") val inventory: Int?
+    @field:NotNull(message = "Inventory must not be null") @JsonProperty("inventory") val inventory: Int?,
+    @field:NotNull(message = "Cost must not be null") @JsonProperty("cost") val cost: Double?
 )
 
 data class ProductId(val id: Int)

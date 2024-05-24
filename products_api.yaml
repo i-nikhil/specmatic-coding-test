@@ -29,7 +29,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Product'
+                  $ref: '#/components/schemas/ProductWithCost'
               examples:
                 GET_PRODUCTS:
                   value:
@@ -37,6 +37,7 @@ paths:
                       name: 'XYZ Phone'
                       type: 'gadget'
                       inventory: 2
+                      cost: 480.50
         "400":
           description: Bad Request
           content:
@@ -56,6 +57,7 @@ paths:
                   name: iPhone
                   type: gadget
                   inventory: 100
+                  cost: 480.50
       responses:
         "201":
           description: POST /products
@@ -86,10 +88,14 @@ components:
           $ref: '#/components/schemas/ProductType'
         inventory:
           type: integer
+        cost:
+          type: number
+          format: float
       required:
         - name
         - type
         - inventory
+        - cost
     ProductType:
       type: string
       title: Product Type
@@ -111,6 +117,13 @@ components:
       allOf:
         - $ref: '#/components/schemas/ProductId'
         - $ref: '#/components/schemas/ProductDetails'
+    ProductWithCost:
+      allOf:
+        - $ref: '#/components/schemas/Product'
+        - properties:
+            cost:
+              type: number
+              format: float
     ErrorResponseBody:
       type: object
       properties:
