@@ -28,7 +28,7 @@ class ProductsController(private val productRepository: ProductRepository) {
                         ErrorResponseBody(
                             timestamp = java.time.LocalDateTime.now().toString(),
                             status = 400,
-                            error = "No products found of this type",
+                            error = "No products found for type: $type",
                             path = "/products?type=$type"
                         )
                     )
@@ -38,7 +38,7 @@ class ProductsController(private val productRepository: ProductRepository) {
                     ErrorResponseBody(
                         timestamp = java.time.LocalDateTime.now().toString(),
                         status = 400,
-                        error = "Invalid type parameter",
+                        error = "Invalid type parameter: $type",
                         path = "/products?type=$type"
                     )
                 )
@@ -58,7 +58,7 @@ class ProductsController(private val productRepository: ProductRepository) {
                 ErrorResponseBody(
                     timestamp = java.time.LocalDateTime.now().toString(),
                     status = 400,
-                    error = "Bad Request",
+                    error = "Request fields must not be null",
                     path = "/products"
                 )
             )
